@@ -1093,7 +1093,7 @@ public class VideoActivity extends AppCompatActivity {
     private void retrieveAccessTokenfromServer() {
         Ion.with(this).load(String.format("%s?identity=%s", ACCESS_TOKEN_SERVER, UUID.randomUUID().toString())).asString().setCallback((e, token) -> {
                     if (e == null) {
-                        VideoActivity.this.accessToken = token;
+                        VideoActivity.this.accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmLTE1NzMwMjg2OTciLCJpc3MiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmIiwic3ViIjoiQUNmOTIyOTFlZGYyZTRlNmI5MGUyYjQzNzQ1MmVkNWVmZiIsImV4cCI6MTU3MzAzMjI5NywiZ3JhbnRzIjp7ImlkZW50aXR5Ijoia2FtYWwxMDA5IiwidmlkZW8iOnsicm9vbSI6ImthbWFsMTAwOSJ9fX0.T1U0tkFpE1yAok4Ko06xglC3de_0ZLQFLxByQU5ctVY";
                     } else {
                         Toast.makeText(VideoActivity.this, R.string.error_retrieving_access_token, Toast.LENGTH_LONG).show();
                     }

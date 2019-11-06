@@ -21,12 +21,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //startActivity(new Intent(this, VideoActivity.class));
+        startActivity(new Intent(this, VideoActivity.class));
 
         // Render camera to a view
         primaryVideoView = (VideoView) findViewById(R.id.local_video);
-        shareVideoTrack();
-        audioOutput();
+        //shareVideoTrack();
+        //audioOutput();
 
 
     }
