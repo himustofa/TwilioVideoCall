@@ -1,0 +1,42 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.getSecretProperty = { key, defaultValue ->
+        def value = System.getenv(key)
+        if (value == null) {
+            Properties properties = new Properties()
+            if (project.rootProject.file('local.properties').exists()) {
+                properties.load(project.rootProject.file('local.properties').newDataInputStream())
+                value = properties.getProperty(key)
+            }
+        }
+        if (value == null) {
+            value = defaultValue
+        }
+        return value
+    }
+
+    repositories {
+        google()
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.2'
+        
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
