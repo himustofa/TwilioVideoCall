@@ -31,11 +31,14 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
 import com.quickstart.twiliovideocall.dialog.Dialog;
 import com.quickstart.twiliovideocall.util.CameraCapturerCompat;
+import com.quickstart.twiliovideocall.util.ConstantKey;
 import com.twilio.video.AudioCodec;
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.ConnectOptions;
@@ -65,6 +68,9 @@ import com.twilio.video.VideoTrack;
 import com.twilio.video.VideoView;
 import com.twilio.video.Vp8Codec;
 import com.twilio.video.Vp9Codec;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -401,7 +407,7 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private void setAccessToken() {
-        if (!BuildConfig.USE_TOKEN_SERVER) {
+        if (BuildConfig.USE_TOKEN_SERVER) {
             /*
              * OPTION 1 - Generate an access token from the getting started portal
              * https://www.twilio.com/console/video/dev-tools/testing-tools and add
@@ -1091,11 +1097,32 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private void retrieveAccessTokenfromServer() {
-        Ion.with(this).load(String.format("%s?identity=%s", ACCESS_TOKEN_SERVER, UUID.randomUUID().toString())).asString().setCallback((e, token) -> {
+        /*Ion.with(this).load(String.format("%s?identity=%s", ACCESS_TOKEN_SERVER, UUID.randomUUID().toString())).asString().setCallback((e, token) -> {
                     if (e == null) {
-                        VideoActivity.this.accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmLTE1NzMwMjg2OTciLCJpc3MiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmIiwic3ViIjoiQUNmOTIyOTFlZGYyZTRlNmI5MGUyYjQzNzQ1MmVkNWVmZiIsImV4cCI6MTU3MzAzMjI5NywiZ3JhbnRzIjp7ImlkZW50aXR5Ijoia2FtYWwxMDA5IiwidmlkZW8iOnsicm9vbSI6ImthbWFsMTAwOSJ9fX0.T1U0tkFpE1yAok4Ko06xglC3de_0ZLQFLxByQU5ctVY";
+                        VideoActivity.this.accessToken = token;
                     } else {
                         Toast.makeText(VideoActivity.this, R.string.error_retrieving_access_token, Toast.LENGTH_LONG).show();
+                    }
+                });*/
+
+        Ion.with(this)
+                .load(ACCESS_TOKEN_SERVER + "?identity=" + (UUID.randomUUID().toString()).replace("-", "") + "&room=" + ConstantKey.ROOM_KEY)
+                .asString()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<String>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<String> result) {
+                        if (e == null) {
+                            try {
+                                JSONObject json = new JSONObject(result.getResult());
+                                Log.d(TAG, "Token: "+ json.getString("token"));
+                                VideoActivity.this.accessToken = result.getResult();
+                            } catch (JSONException ex) {
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            Toast.makeText(VideoActivity.this, R.string.error_retrieving_access_token, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
