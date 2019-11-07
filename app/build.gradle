@@ -11,7 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "TWILIO_ACCESS_TOKEN", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmLTE1NzMwNDA5MzkiLCJpc3MiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmIiwic3ViIjoiQUNmOTIyOTFlZGYyZTRlNmI5MGUyYjQzNzQ1MmVkNWVmZiIsImV4cCI6MTU3MzA0NDUzOSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiZGVtbzEzMyIsInZpZGVvIjp7InJvb20iOiJrYW1hbDEwMDkifX19.NtPzFo6L8av9XDlkWZCErycQmOnra-Ovn5ijBny_ySI")}\"")
+        buildConfigField("String", "TWILIO_ACCESS_TOKEN", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmLTE1NzMxMTQ4MDYiLCJpc3MiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmIiwic3ViIjoiQUNmOTIyOTFlZGYyZTRlNmI5MGUyYjQzNzQ1MmVkNWVmZiIsImV4cCI6MTU3MzExODQwNiwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiVHdpbGlvVmlkZW8iLCJ2aWRlbyI6eyJyb29tIjoia2FtYWwifX19._gztlqw7M1mVpDvGEJfysYsbI5z4_y4A6anpj8VweUc")}\"")
         buildConfigField("String", "TWILIO_ACCESS_TOKEN_SERVER", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN_SERVER", "https://straw-bee-5457.twil.io/token")}\"")
         buildConfigField("boolean", "USE_TOKEN_SERVER", "${getSecretProperty("USE_TOKEN_SERVER", false)}")
     }
@@ -53,5 +53,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'com.twilio:video-android:5.0.0'
-    implementation 'com.koushikdutta.ion:ion:2.1.7' //3.0.8
+    implementation 'com.koushikdutta.ion:ion:3.0.0'
 }
