@@ -174,54 +174,6 @@ public class VideoActivity extends AppCompatActivity {
         intializeUI();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_video_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.speaker_menu_item:
-                if (audioManager.isSpeakerphoneOn()) {
-                    audioManager.setSpeakerphoneOn(false);
-                    item.setIcon(R.drawable.ic_phonelink_ring_white_24dp);
-                    isSpeakerPhoneEnabled = false;
-                } else {
-                    audioManager.setSpeakerphoneOn(true);
-                    item.setIcon(R.drawable.ic_volume_up_white_24dp);
-                    isSpeakerPhoneEnabled = true;
-                }
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
-            boolean cameraAndMicPermissionGranted = true;
-
-            for (int grantResult : grantResults) {
-                cameraAndMicPermissionGranted &= grantResult == PackageManager.PERMISSION_GRANTED;
-            }
-
-            if (cameraAndMicPermissionGranted) {
-                createAudioAndVideoTracks();
-                setAccessToken();
-            } else {
-                Toast.makeText(this, R.string.permissions_needed, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onResume() {
@@ -298,6 +250,54 @@ public class VideoActivity extends AppCompatActivity {
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_video_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.speaker_menu_item:
+                if (audioManager.isSpeakerphoneOn()) {
+                    audioManager.setSpeakerphoneOn(false);
+                    item.setIcon(R.drawable.ic_phonelink_ring_white_24dp);
+                    isSpeakerPhoneEnabled = false;
+                } else {
+                    audioManager.setSpeakerphoneOn(true);
+                    item.setIcon(R.drawable.ic_volume_up_white_24dp);
+                    isSpeakerPhoneEnabled = true;
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
+            boolean cameraAndMicPermissionGranted = true;
+
+            for (int grantResult : grantResults) {
+                cameraAndMicPermissionGranted &= grantResult == PackageManager.PERMISSION_GRANTED;
+            }
+
+            if (cameraAndMicPermissionGranted) {
+                createAudioAndVideoTracks();
+                setAccessToken();
+            } else {
+                Toast.makeText(this, R.string.permissions_needed, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private boolean checkPermissionForCameraAndMicrophone() {
