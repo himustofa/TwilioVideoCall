@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
@@ -415,6 +416,7 @@ public class VideoActivity extends AppCompatActivity {
              * string in your local.properties file.
              */
             this.accessToken = TWILIO_ACCESS_TOKEN;
+            Log.d(TAG, "Token: "+ accessToken);
         } else {
             /*
              * OPTION 2 - Retrieve an access token from your own web app.
@@ -496,8 +498,6 @@ public class VideoActivity extends AppCompatActivity {
         switch (audioCodecName) {
             case IsacCodec.NAME:
                 return new IsacCodec();
-            case OpusCodec.NAME:
-                return new OpusCodec();
             case PcmaCodec.NAME:
                 return new PcmaCodec();
             case PcmuCodec.NAME:
@@ -705,7 +705,7 @@ public class VideoActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onConnectFailure(Room room, TwilioException e) {
-                videoStatusTextView.setText("Failed to connect");
+                videoStatusTextView.setText("Failed to connect " + e.getMessage());
                 configureAudio(false);
                 intializeUI();
             }
@@ -1013,85 +1013,108 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private DialogInterface.OnClickListener connectClickListener(final EditText roomEditText) {
-        return (dialog, which) -> {
-            /*
-             * Connect to room
-             */
-            connectToRoom(roomEditText.getText().toString());
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                /*
+                 * Connect to room
+                 */
+                VideoActivity.this.connectToRoom(roomEditText.getText().toString());
+            }
         };
     }
 
     private View.OnClickListener disconnectClickListener() {
-        return v -> {
-            /*
-             * Disconnect from room
-             */
-            if (room != null) {
-                room.disconnect();
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                 * Disconnect from room
+                 */
+                if (room != null) {
+                    room.disconnect();
+                }
+                VideoActivity.this.intializeUI();
             }
-            intializeUI();
         };
     }
 
     private View.OnClickListener connectActionClickListener() {
-        return v -> showConnectDialog();
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoActivity.this.showConnectDialog();
+            }
+        };
     }
 
     private DialogInterface.OnClickListener cancelConnectDialogClickListener() {
-        return (dialog, which) -> {
-            intializeUI();
-            connectDialog.dismiss();
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                VideoActivity.this.intializeUI();
+                connectDialog.dismiss();
+            }
         };
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private View.OnClickListener switchCameraClickListener() {
-        return v -> {
-            if (cameraCapturerCompat != null) {
-                CameraCapturer.CameraSource cameraSource = cameraCapturerCompat.getCameraSource();
-                cameraCapturerCompat.switchCamera();
-                if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
-                    thumbnailVideoView.setMirror(cameraSource == CameraCapturer.CameraSource.BACK_CAMERA);
-                } else {
-                    primaryVideoView.setMirror(cameraSource == CameraCapturer.CameraSource.BACK_CAMERA);
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cameraCapturerCompat != null) {
+                    CameraCapturer.CameraSource cameraSource = cameraCapturerCompat.getCameraSource();
+                    cameraCapturerCompat.switchCamera();
+                    if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
+                        thumbnailVideoView.setMirror(cameraSource == CameraCapturer.CameraSource.BACK_CAMERA);
+                    } else {
+                        primaryVideoView.setMirror(cameraSource == CameraCapturer.CameraSource.BACK_CAMERA);
+                    }
                 }
             }
         };
     }
 
     private View.OnClickListener localVideoClickListener() {
-        return v -> {
-            /*
-             * Enable/disable the local video track
-             */
-            if (localVideoTrack != null) {
-                boolean enable = !localVideoTrack.isEnabled();
-                localVideoTrack.enable(enable);
-                int icon;
-                if (enable) {
-                    icon = R.drawable.ic_videocam_white_24dp;
-                    switchCameraActionFab.show();
-                } else {
-                    icon = R.drawable.ic_videocam_off_black_24dp;
-                    switchCameraActionFab.hide();
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                 * Enable/disable the local video track
+                 */
+                if (localVideoTrack != null) {
+                    boolean enable = !localVideoTrack.isEnabled();
+                    localVideoTrack.enable(enable);
+                    int icon;
+                    if (enable) {
+                        icon = R.drawable.ic_videocam_white_24dp;
+                        switchCameraActionFab.show();
+                    } else {
+                        icon = R.drawable.ic_videocam_off_black_24dp;
+                        switchCameraActionFab.hide();
+                    }
+                    localVideoActionFab.setImageDrawable(ContextCompat.getDrawable(VideoActivity.this, icon));
                 }
-                localVideoActionFab.setImageDrawable(ContextCompat.getDrawable(VideoActivity.this, icon));
             }
         };
     }
 
     private View.OnClickListener muteClickListener() {
-        return v -> {
-            /*
-             * Enable/disable the local audio track. The results of this operation are
-             * signaled to other Participants in the same Room. When an audio track is
-             * disabled, the audio is muted.
-             */
-            if (localAudioTrack != null) {
-                boolean enable = !localAudioTrack.isEnabled();
-                localAudioTrack.enable(enable);
-                int icon = enable ? R.drawable.ic_mic_white_24dp : R.drawable.ic_mic_off_black_24dp;
-                muteActionFab.setImageDrawable(ContextCompat.getDrawable(VideoActivity.this, icon));
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                 * Enable/disable the local audio track. The results of this operation are
+                 * signaled to other Participants in the same Room. When an audio track is
+                 * disabled, the audio is muted.
+                 */
+                if (localAudioTrack != null) {
+                    boolean enable = !localAudioTrack.isEnabled();
+                    localAudioTrack.enable(enable);
+                    int icon = enable ? R.drawable.ic_mic_white_24dp : R.drawable.ic_mic_off_black_24dp;
+                    muteActionFab.setImageDrawable(ContextCompat.getDrawable(VideoActivity.this, icon));
+                }
             }
         };
     }
@@ -1107,19 +1130,13 @@ public class VideoActivity extends AppCompatActivity {
 
         Ion.with(this)
                 .load(ACCESS_TOKEN_SERVER + "?identity=" + (UUID.randomUUID().toString()).replace("-", "") + "&room=" + ConstantKey.ROOM_KEY)
-                .asString()
-                .withResponse()
-                .setCallback(new FutureCallback<Response<String>>() {
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
                     @Override
-                    public void onCompleted(Exception e, Response<String> result) {
+                    public void onCompleted(Exception e, JsonObject result) {
                         if (e == null) {
-                            try {
-                                JSONObject json = new JSONObject(result.getResult());
-                                Log.d(TAG, "Token: "+ json.getString("token"));
-                                VideoActivity.this.accessToken = result.getResult();
-                            } catch (JSONException ex) {
-                                ex.printStackTrace();
-                            }
+                            VideoActivity.this.accessToken = result.get("token").getAsString();
+                            Log.d(TAG, "Token Server: "+ VideoActivity.this.accessToken);
                         } else {
                             Toast.makeText(VideoActivity.this, R.string.error_retrieving_access_token, Toast.LENGTH_LONG).show();
                         }
@@ -1162,7 +1179,11 @@ public class VideoActivity extends AppCompatActivity {
                             .setAudioAttributes(playbackAttributes)
                             .setAcceptsDelayedFocusGain(true)
                             .setOnAudioFocusChangeListener(
-                                    i -> {
+                                    new AudioManager.OnAudioFocusChangeListener() {
+                                        @Override
+                                        public void onAudioFocusChange(int i) {
+                                            //
+                                        }
                                     })
                             .build();
             audioManager.requestAudioFocus(focusRequest);

@@ -6,6 +6,13 @@ public class ConstantKey {
 }
 /*
 
+Twilio Video Room
+https://www.twilio.com/docs/video/tutorials/understanding-video-rooms
+
+Twilio Function
+https://www.twilio.com/docs/runtime/functions-assets-api/api/function?code-sample=code-delete-function&code-language=Java&code-sdk-version=7.x
+
+
 
 Password : Gmail | Github
 kamal1009@stis.com.bd
