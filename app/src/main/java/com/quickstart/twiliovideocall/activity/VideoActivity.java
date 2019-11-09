@@ -333,21 +333,13 @@ public class VideoActivity extends AppCompatActivity {
 
     private void setAccessToken() {
         if (!BuildConfig.USE_TOKEN_SERVER) {
-            /*
-             * OPTION 1 - Generate an access token from the getting started portal
-             * https://www.twilio.com/console/video/dev-tools/testing-tools and add
-             * the variable TWILIO_ACCESS_TOKEN setting it equal to the access token
-             * string in your local.properties file.
-             */
+            // OPTION 1 - Generate an access token from the getting started portal
+            // https://www.twilio.com/console/video/dev-tools/testing-tools and add the variable TWILIO_ACCESS_TOKEN setting it equal to the access token string in your local.properties file.
             this.accessToken = TWILIO_ACCESS_TOKEN;
             Log.d(TAG, "Token: "+ accessToken);
         } else {
-            /*
-             * OPTION 2 - Retrieve an access token from your own web app.
-             * Add the variable ACCESS_TOKEN_SERVER assigning it to the url of your
-             * token server and the variable USE_TOKEN_SERVER=true to your
-             * local.properties file.
-             */
+             // OPTION 2 - Retrieve an access token from your own web app.
+             // Add the variable ACCESS_TOKEN_SERVER assigning it to the url of your token server and the variable USE_TOKEN_SERVER=true to your local.properties file.
             retrieveAccessTokenFromServer();
         }
     }
