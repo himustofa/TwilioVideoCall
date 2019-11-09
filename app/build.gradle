@@ -11,9 +11,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        //Declare variable for access token in BuildConfig.class for secure
         buildConfigField("String", "TWILIO_ACCESS_TOKEN", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmLTE1NzMyOTY3OTkiLCJpc3MiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmIiwic3ViIjoiQUNmOTIyOTFlZGYyZTRlNmI5MGUyYjQzNzQ1MmVkNWVmZiIsImV4cCI6MTU3MzMwMDM5OSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoidGVzdDEiLCJ2aWRlbyI6eyJyb29tIjoia2FtYWwifX19.B0fEkxkF4-V1b1LwdIxm5U8T2X70zXeYlXLnlWR7pQg")}\"")
         buildConfigField("String", "TWILIO_ACCESS_TOKEN_SERVER", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN_SERVER", "https://straw-bee-5457.twil.io/token")}\"")
-        buildConfigField("boolean", "USE_TOKEN_SERVER", "${getSecretProperty("USE_TOKEN_SERVER", false)}")
+        buildConfigField("boolean", "USE_TOKEN_SERVER", "${getSecretProperty("USE_TOKEN_SERVER", true)}")
     }
     buildTypes {
         release {

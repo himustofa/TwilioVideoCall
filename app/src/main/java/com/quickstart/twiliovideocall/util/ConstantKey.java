@@ -23,18 +23,68 @@ public static final String ACCOUNT_SID = "ACf92291edf2e4e6b90e2b437452ed5eff";
 public static final String AUTH_TOKEN = "3e235fad509dd22c78eebefb79aa9db8";
 
 =============================================
+import com.twilio.Twilio;
+import com.twilio.rest.serverless.v1.Service;
+
+public class TwilioService {
+	// Find your Account Sid and Token at twilio.com/console
+    // DANGER! This is insecure. See http://twil.io/secure
+    public static final String ACCOUNT_SID = "ACf92291edf2e4e6b90e2b437452ed5eff";
+    public static final String AUTH_TOKEN = "3e235fad509dd22c78eebefb79aa9db8";
+
+    public static void main(String[] args) {
+        //Service Create
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Service service = Service.creator("TwilioVideo", "TwilioVideo").setIncludeCredentials(true).create();
+        System.out.println(service.getSid()); //ZS2c2fc90311ef23d917dad51489f2c332
+
+        //Service Fetch
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Service service = Service.fetcher("ZS8e179c5fb4f5d02a1abad6de6455fe70") .fetch();
+        System.out.println(service.getAccountSid() +", "+ service.getFriendlyName() +", "+ service.getSid());
+
+        //Service Delete
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Service.deleter("ZS06d95f036e6572d64c7bdbb2ad3e7506").delete();
+    }
+}
+
+
+import com.twilio.Twilio;
+import com.twilio.rest.serverless.v1.service.Function;
+
+// Install the Java helper library from twilio.com/docs/java/install
+public class TwilioFunction {
+    // Find your Account Sid and Token at twilio.com/console
+    // DANGER! This is insecure. See http://twil.io/secure
+    public static final String ACCOUNT_SID = "ACf92291edf2e4e6b90e2b437452ed5eff";
+    public static final String AUTH_TOKEN = "3e235fad509dd22c78eebefb79aa9db8";
+
+    public static void main(String[] args) {
+		//Function Create
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Function function = Function.creator("ZS2c2fc90311ef23d917dad51489f2c332", "twilio_function").create();
+        System.out.println(function.getSid()); //ZH40bb0f10d998bea891cc4b825265026e
+
+		//Function Delete
+    }
+}
+
+
+TwilioApiKey
+------------
+
 FRIENDLY NAME
-TwilioApiKeyTest
-
+TwilioApiKey
 SID
-SK7b0f47547393b1df0e9a279e87863b0c
-
+SK31d9fa30bbd7c8a05610967484d81741
 KEY TYPE
 Standard
-
 SECRET
-fuNt95cfGU7qo5r5bnd2Z2Ijyi8BPr8z
-================================================
+02fFK2TyUij0QK1WigxcF2KTqr3ERCFI
+
+------------
+
 exports.handler = function(context, event, callback) {
 	const AccessToken = require('twilio').jwt.AccessToken;
     const VideoGrant = AccessToken.VideoGrant;
