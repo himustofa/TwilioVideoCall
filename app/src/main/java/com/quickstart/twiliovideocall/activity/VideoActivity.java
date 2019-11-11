@@ -171,7 +171,7 @@ public class VideoActivity extends AppCompatActivity {
         intializeUI();
     }
 
-    
+    //=============================================================| onResume(), onPause(), onDestroy(), onCreateOptionsMenu()
     @Override
     protected void onResume() {
         super.onResume();
@@ -278,7 +278,7 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
-    
+    //=============================================================| Request Permissions
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
@@ -296,13 +296,11 @@ public class VideoActivity extends AppCompatActivity {
             }
         }
     }
-
     private boolean checkPermissionForCameraAndMicrophone() {
         int resultCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int resultMic = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         return resultCamera == PackageManager.PERMISSION_GRANTED && resultMic == PackageManager.PERMISSION_GRANTED;
     }
-
     private void requestPermissionForCameraAndMicrophone() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
             Toast.makeText(this, R.string.permissions_needed, Toast.LENGTH_LONG).show();
@@ -311,7 +309,7 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
-    
+    //=============================================================| Create Audio and Video Tracks
     private void createAudioAndVideoTracks() {
         // Share your microphone
         localAudioTrack = LocalAudioTrack.create(this, true, LOCAL_AUDIO_TRACK_NAME);
@@ -328,6 +326,7 @@ public class VideoActivity extends AppCompatActivity {
         return (CameraCapturer.isSourceAvailable(CameraCapturer.CameraSource.FRONT_CAMERA)) ? (CameraCapturer.CameraSource.FRONT_CAMERA) : (CameraCapturer.CameraSource.BACK_CAMERA);
     }
 
+    //=============================================================| Get server Token
     private void setAccessToken() {
         if (!BuildConfig.USE_TOKEN_SERVER) {
             // OPTION 1 - Generate an access token from the getting started portal
@@ -341,6 +340,24 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
+    private void retrieveAccessTokenFromServer() {
+        Ion.with(this)
+                .load(ACCESS_TOKEN_SERVER + "?identity=" + (UUID.randomUUID().toString()).replace("-", "") + "&room=" + ConstantKey.ROOM_KEY)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e == null) {
+                            VideoActivity.this.accessToken = result.get("token").getAsString();
+                            Log.d(TAG, "Token Server: "+ VideoActivity.this.accessToken);
+                        } else {
+                            Toast.makeText(VideoActivity.this, R.string.error_retrieving_access_token, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    //=============================================================| Room connection by Alert dialog
     private void connectToRoom(String roomName) {
         configureAudio(true);
         ConnectOptions.Builder connectOptionsBuilder = new ConnectOptions.Builder(accessToken).roomName(roomName);
@@ -375,8 +392,8 @@ public class VideoActivity extends AppCompatActivity {
         setDisconnectAction();
     }
 
+    //=============================================================| UI
     // The initial state when there is no active room.
-    
     private void intializeUI() {
         connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_video_call_white_24dp));
         connectActionFab.show();
@@ -389,6 +406,7 @@ public class VideoActivity extends AppCompatActivity {
         muteActionFab.setOnClickListener(muteClickListener());
     }
 
+    //=============================================================| SharedPreferences
     // Get the preferred audio codec from shared preferences
     private AudioCodec getAudioCodecPreference(String key, String defaultValue) {
         final String audioCodecName = preferences.getString(key, defaultValue);
@@ -435,6 +453,7 @@ public class VideoActivity extends AppCompatActivity {
         return new EncodingParameters(maxAudioBitrate, maxVideoBitrate);
     }
 
+    //=============================================================| Action Listener
     // The actions performed during disconnect.
     private void setDisconnectAction() {
         connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_call_end_white_24px));
@@ -450,7 +469,6 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     // Called when remote participant joins the room
-    
     private void addRemoteParticipant(RemoteParticipant remoteParticipant) {
         // This app only displays video for one additional participant per Room
         if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
@@ -475,7 +493,6 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     // Set primary view as renderer for participant video track
-    
     private void addRemoteParticipantVideo(VideoTrack videoTrack) {
         moveLocalVideoToThumbnailView();
         primaryVideoView.setMirror(false);
@@ -494,7 +511,6 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     // Called when remote participant leaves the room
-    
     private void removeRemoteParticipant(RemoteParticipant remoteParticipant) { videoStatusTextView.setText("RemoteParticipant " + remoteParticipant.getIdentity() + " left.");
         if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
             return;
@@ -930,23 +946,8 @@ public class VideoActivity extends AppCompatActivity {
         };
     }
 
-    private void retrieveAccessTokenFromServer() {
-        Ion.with(this)
-                .load(ACCESS_TOKEN_SERVER + "?identity=" + (UUID.randomUUID().toString()).replace("-", "") + "&room=" + ConstantKey.ROOM_KEY)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e == null) {
-                            VideoActivity.this.accessToken = result.get("token").getAsString();
-                            Log.d(TAG, "Token Server: "+ VideoActivity.this.accessToken);
-                        } else {
-                            Toast.makeText(VideoActivity.this, R.string.error_retrieving_access_token, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
 
+    //=============================================================| Configuration
     private void configureAudio(boolean enable) {
         if (enable) {
             previousAudioMode = audioManager.getMode();
