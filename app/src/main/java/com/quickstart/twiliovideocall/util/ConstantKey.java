@@ -83,6 +83,18 @@ Standard
 SECRET
 02fFK2TyUij0QK1WigxcF2KTqr3ERCFI
 
+-----------
+
+kamalstis1009@gmail.com
+FRIENDLY NAME
+TwilioApiKey
+SID
+SKd8674e61706c42219ff9fd85ec3941e1
+KEY TYPE
+Standard
+SECRET
+dN3MetpP45dRagIh3UpLNhWaVAswgYa0
+
 ------------
 
 exports.handler = function(context, event, callback) {

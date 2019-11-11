@@ -1,7 +1,6 @@
 package com.quickstart.twiliovideocall.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -34,12 +33,13 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.Response;
+
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
 import com.quickstart.twiliovideocall.dialog.Dialog;
 import com.quickstart.twiliovideocall.util.CameraCapturerCompat;
 import com.quickstart.twiliovideocall.util.ConstantKey;
+
 import com.twilio.video.AudioCodec;
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.ConnectOptions;
@@ -69,9 +69,6 @@ import com.twilio.video.VideoTrack;
 import com.twilio.video.VideoView;
 import com.twilio.video.Vp8Codec;
 import com.twilio.video.Vp9Codec;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -174,7 +171,7 @@ public class VideoActivity extends AppCompatActivity {
         intializeUI();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -281,7 +278,7 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
@@ -314,7 +311,7 @@ public class VideoActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void createAudioAndVideoTracks() {
         // Share your microphone
         localAudioTrack = LocalAudioTrack.create(this, true, LOCAL_AUDIO_TRACK_NAME);
@@ -379,7 +376,7 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     // The initial state when there is no active room.
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void intializeUI() {
         connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_video_call_white_24dp));
         connectActionFab.show();
@@ -453,7 +450,7 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     // Called when remote participant joins the room
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void addRemoteParticipant(RemoteParticipant remoteParticipant) {
         // This app only displays video for one additional participant per Room
         if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
@@ -478,27 +475,26 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     // Set primary view as renderer for participant video track
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void addRemoteParticipantVideo(VideoTrack videoTrack) {
         moveLocalVideoToThumbnailView();
         primaryVideoView.setMirror(false);
         videoTrack.addRenderer(primaryVideoView);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void moveLocalVideoToThumbnailView() {
         if (thumbnailVideoView.getVisibility() == View.GONE) {
             thumbnailVideoView.setVisibility(View.VISIBLE);
             localVideoTrack.removeRenderer(primaryVideoView);
             localVideoTrack.addRenderer(thumbnailVideoView);
             localVideoView = thumbnailVideoView;
-            thumbnailVideoView.setMirror(cameraCapturerCompat.getCameraSource() ==
-                    CameraCapturer.CameraSource.FRONT_CAMERA);
+            thumbnailVideoView.setMirror(cameraCapturerCompat.getCameraSource() == CameraCapturer.CameraSource.FRONT_CAMERA);
         }
     }
 
     // Called when remote participant leaves the room
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void removeRemoteParticipant(RemoteParticipant remoteParticipant) { videoStatusTextView.setText("RemoteParticipant " + remoteParticipant.getIdentity() + " left.");
         if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
             return;
@@ -520,7 +516,7 @@ public class VideoActivity extends AppCompatActivity {
         videoTrack.removeRenderer(primaryVideoView);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private void moveLocalVideoToPrimaryView() {
         if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
             thumbnailVideoView.setVisibility(View.GONE);
@@ -536,7 +532,7 @@ public class VideoActivity extends AppCompatActivity {
     // Room events listener
     private Room.Listener roomListener() {
         return new Room.Listener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            
             @Override
             public void onConnected(@NonNull Room room) {
                 localParticipant = room.getLocalParticipant();
@@ -561,7 +557,7 @@ public class VideoActivity extends AppCompatActivity {
                 reconnectingProgressBar.setVisibility(View.GONE);
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            
             @Override
             public void onConnectFailure(@NonNull Room room, @NonNull TwilioException e) {
                 videoStatusTextView.setText("Failed to connect " + e.getMessage());
@@ -569,7 +565,7 @@ public class VideoActivity extends AppCompatActivity {
                 intializeUI();
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            
             @Override
             public void onDisconnected(@NonNull Room room, @NonNull TwilioException e) {
                 localParticipant = null;
@@ -584,14 +580,14 @@ public class VideoActivity extends AppCompatActivity {
                 }
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            
             @Override
             public void onParticipantConnected(@NonNull Room room, @NonNull RemoteParticipant remoteParticipant) {
                 addRemoteParticipant(remoteParticipant);
 
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            
             @Override
             public void onParticipantDisconnected(@NonNull Room room, @NonNull RemoteParticipant remoteParticipant) {
                 removeRemoteParticipant(remoteParticipant);
@@ -771,7 +767,7 @@ public class VideoActivity extends AppCompatActivity {
                 videoStatusTextView.setText("onDataTrackSubscriptionFailed");
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            
             @Override
             public void onVideoTrackSubscribed(@NonNull RemoteParticipant remoteParticipant, @NonNull RemoteVideoTrackPublication remoteVideoTrackPublication, @NonNull RemoteVideoTrack remoteVideoTrack) {
                 Log.i(TAG, String.format("onVideoTrackSubscribed: " +
@@ -879,7 +875,7 @@ public class VideoActivity extends AppCompatActivity {
         };
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    
     private View.OnClickListener switchCameraClickListener() {
         return new View.OnClickListener() {
             @Override
