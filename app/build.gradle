@@ -51,8 +51,28 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //===============================================| Material library
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.1.0'
+
+    //===============================================| Twilio library
     implementation 'com.twilio:video-android:5.0.0'
+
+    //===============================================| Asynchronous networking library
     implementation 'com.koushikdutta.ion:ion:3.0.0'
+
+    //===============================================| Image shape circle library
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    //===============================================| Firebase library
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-database:18.0.1'
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+
+    //===============================================| Android Jetpack Components for MVVM
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.0.0"
+    testImplementation "androidx.arch.core:core-testing:2.0.1"
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -1,4 +1,4 @@
-package com.quickstart.twiliovideocall.activity;
+package com.quickstart.twiliovideocall.views.activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;

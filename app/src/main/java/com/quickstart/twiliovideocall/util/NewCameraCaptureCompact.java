@@ -13,7 +13,7 @@ import org.webrtc.Camera2Enumerator;
 /*
  * Simple wrapper class that uses Camera2Capturer with supported devices.
  */
-public class CameraCaptureCompact {
+public class NewCameraCaptureCompact {
     private static final String TAG = "CameraCapturerCompat";
 
     private CameraCapturer camera1Capturer;
@@ -38,7 +38,7 @@ public class CameraCaptureCompact {
         }
     };
 
-    public CameraCaptureCompact(Context context, CameraCapturer.CameraSource cameraSource) {
+    public NewCameraCaptureCompact(Context context, CameraCapturer.CameraSource cameraSource) {
         if (Camera2Capturer.isSupported(context)) {
             setCameraPairs(context);
             camera2Capturer = new Camera2Capturer(context, getCameraId(cameraSource), camera2Listener);

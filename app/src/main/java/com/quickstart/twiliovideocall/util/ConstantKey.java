@@ -3,7 +3,27 @@ package com.quickstart.twiliovideocall.util;
 public class ConstantKey {
 
     public static final String ROOM_KEY = "kamal";
+
+    //====================================================| Firebase
+    public static final String USER_NODE = "users";
+    public static final String DOCTOR_NODE = "doctors";
+
+
+    public static final String USER_UID = "USER31d9fa30bbd7c8a05610967484d81741";
+    public static final String DOCTOR_UID = "DOCTORd8674e61706c42219ff9fd85ec3941e1";
 }
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
 Twilio Video Room

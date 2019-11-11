@@ -1,4 +1,4 @@
-package com.quickstart.twiliovideocall.dialog;
+package com.quickstart.twiliovideocall.views.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;

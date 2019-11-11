@@ -1,13 +1,12 @@
-package com.quickstart.twiliovideocall;
+package com.quickstart.twiliovideocall.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 
-import com.quickstart.twiliovideocall.activity.VideoActivity;
+import com.quickstart.twiliovideocall.R;
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.LocalVideoTrack;
 import com.twilio.video.VideoView;
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startActivity(new Intent(this, VideoActivity.class));
+        //startActivity(new Intent(this, VideoActivity.class));
 
         // Render camera to a view
         primaryVideoView = (VideoView) findViewById(R.id.local_video);

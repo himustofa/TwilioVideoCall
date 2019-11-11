@@ -1,4 +1,4 @@
-package com.quickstart.twiliovideocall.activity;
+package com.quickstart.twiliovideocall.views.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -36,7 +36,7 @@ import com.koushikdutta.ion.Ion;
 
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
-import com.quickstart.twiliovideocall.dialog.Dialog;
+import com.quickstart.twiliovideocall.views.dialogs.Dialog;
 import com.quickstart.twiliovideocall.util.CameraCapturerCompat;
 import com.quickstart.twiliovideocall.util.ConstantKey;
 
