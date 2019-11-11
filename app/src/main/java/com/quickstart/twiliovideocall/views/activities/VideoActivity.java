@@ -5,6 +5,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
@@ -48,7 +50,11 @@ import com.koushikdutta.ion.Ion;
 
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
+import com.quickstart.twiliovideocall.models.Doctor;
+import com.quickstart.twiliovideocall.models.User;
 import com.quickstart.twiliovideocall.repositories.volley.MyVolleyApi;
+import com.quickstart.twiliovideocall.viewmodels.DoctorViewModel;
+import com.quickstart.twiliovideocall.viewmodels.UserViewModel;
 import com.quickstart.twiliovideocall.views.dialogs.Dialog;
 import com.quickstart.twiliovideocall.utils.CameraCapturerCompat;
 import com.quickstart.twiliovideocall.utils.ConstantKey;
@@ -152,6 +158,9 @@ public class VideoActivity extends AppCompatActivity {
     private boolean isSpeakerPhoneEnabled = true;
     private boolean enableAutomaticSubscription;
 
+    private UserViewModel mUserViewModel;
+    private DoctorViewModel mDoctorViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,27 +197,59 @@ public class VideoActivity extends AppCompatActivity {
         // Set the initial state of the UI
         intializeUI();
 
-        if (getIntent().getExtras() != null) {
-            String auth = getIntent().getStringExtra(ConstantKey.AUTH_KEY);
-            String name = getIntent().getStringExtra(ConstantKey.NAME_KEY);
+        //===============================================| Initialize ViewModel | Receive the data and observe the data from ViewModel
+        mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        mDoctorViewModel = ViewModelProviders.of(this).get(DoctorViewModel.class);
+
+        /*if (getIntent().getExtras() != null) {
+            String auth = getIntent().getExtras().getString(ConstantKey.AUTH_KEY);
+            String name = getIntent().getExtras().getString(ConstantKey.NAME_KEY);
             Log.d(TAG, "MessagingService: "+auth + ", " +name);
+        }*/
+        if (getIntent().getExtras() != null) {
+            boolean isUser = getIntent().getBooleanExtra("isUser", false);
+            if (isUser) {
+                getDoctorData();
+            } else {
+                //getDoctorData();
+            }
         }
     }
 
-    private void sendNotification() {
+    private void getDoctorData() {
+        mDoctorViewModel.getDoctor(ConstantKey.DOCTOR_UID).observe(this, new Observer<Doctor>() {
+            @Override
+            public void onChanged(Doctor doctor) {
+                if (doctor != null) {
+                    sendNotification(doctor.getToken());
+                }
+            }
+        });
+    }
+
+    /*private void getDoctorData() {
+        mUserViewModel.getUser(ConstantKey.USER_UID).observe(this, new Observer<Doctor>() {
+            @Override
+            public void onChanged(Doctor doctor) {
+                if (doctor != null) {
+                    sendNotification(doctor);
+                }
+            }
+        });
+    }*/
+
+    private void sendNotification(String receiverToken) {
         JSONObject notification = new JSONObject();
         JSONObject body = new JSONObject();
-
         try {
-            body.put("title", "Enter_title");
-            body.put("body", "Enter_body");
-            body.put("message", "Enter_message");   //Enter your notification message
-            notification.put("to", "Enter_token");
+            body.put("title", "HeloDok");
+            body.put("body", "Mr. User");
+            //body.put("message", "Enter_message");   //Enter your notification message
+            notification.put("to", receiverToken);
             notification.put("data", body);
         } catch (Exception e) {
             Log.e(TAG, "" + e.getMessage());
         }
-
         sendNotification(notification);
     }
     private void sendNotification(JSONObject notification) {

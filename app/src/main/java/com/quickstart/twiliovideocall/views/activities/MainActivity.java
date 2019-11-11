@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String result) {
                 if (result.equals("success")) {
-                    startActivity(new Intent(MainActivity.this, VideoActivity.class));
+                    Intent intent = new Intent(MainActivity.this, VideoActivity.class);
+                    intent.putExtra("isUser", true);
+                    startActivity(intent);
                     finish();
                     Utility.dismissProgressDialog(mProgress);
                 } else {
@@ -99,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String result) {
                 if (result.equals("success")) {
-                    startActivity(new Intent(MainActivity.this, VideoActivity.class));
+                    Intent intent = new Intent(MainActivity.this, VideoActivity.class);
+                    intent.putExtra("isUser", false);
+                    startActivity(intent);
                     finish();
                     Utility.dismissProgressDialog(mProgress);
                 } else {

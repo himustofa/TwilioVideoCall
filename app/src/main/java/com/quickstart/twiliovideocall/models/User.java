@@ -8,6 +8,9 @@ public class User {
     private String active;
     private String token;
 
+    public User() {
+    }
+
     public User(String uid, String name, String phone, String active, String token) {
         this.uid = uid;
         this.name = name;

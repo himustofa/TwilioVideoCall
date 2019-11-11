@@ -8,6 +8,9 @@ public class Doctor {
     private String active;
     private String token;
 
+    public Doctor() {
+    }
+
     public Doctor(String uid, String name, String phone, String active, String token) {
         this.uid = uid;
         this.name = name;
