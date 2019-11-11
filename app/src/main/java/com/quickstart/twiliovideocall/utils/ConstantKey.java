@@ -11,6 +11,15 @@ public class ConstantKey {
 
     public static final String USER_UID = "USER31d9fa30bbd7c8a05610967484d81741";
     public static final String DOCTOR_UID = "DOCTORd8674e61706c42219ff9fd85ec3941e1";
+
+
+    public final static String NOTIFICATION_BROADCAST_RECEIVER = "Notification_Broadcast_Receiver";
+    public final static String AUTH_KEY = "AUTH_KEY";
+    public final static String NAME_KEY = "NAME_KEY";
+
+    public static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    public static final String SERVER_KEY = "AAAAxYErjCo:APA91bEWsoMZwbtzjt65KnxbEpqnINU9TFOy2fvN-3I26bNXdCEK8XonxTL863U63i98yzKkBCdLGP5b6W0GgOeP_Rosbgw1a9l8UY-K0vB45Pkh7C_0er8iPJGTc1Ywl_6vgeuSFp6m";
+    public static final String CONTENT_TYPE = "application/json";
 }
 
 

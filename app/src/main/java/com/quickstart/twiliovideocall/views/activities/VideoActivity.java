@@ -5,12 +5,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
@@ -28,6 +31,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
@@ -36,6 +48,7 @@ import com.koushikdutta.ion.Ion;
 
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
+import com.quickstart.twiliovideocall.repositories.volley.MyVolleyApi;
 import com.quickstart.twiliovideocall.views.dialogs.Dialog;
 import com.quickstart.twiliovideocall.utils.CameraCapturerCompat;
 import com.quickstart.twiliovideocall.utils.ConstantKey;
@@ -70,7 +83,12 @@ import com.twilio.video.VideoView;
 import com.twilio.video.Vp8Codec;
 import com.twilio.video.Vp9Codec;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class VideoActivity extends AppCompatActivity {
@@ -169,7 +187,65 @@ public class VideoActivity extends AppCompatActivity {
 
         // Set the initial state of the UI
         intializeUI();
+
+        if (getIntent().getExtras() != null) {
+            String auth = getIntent().getStringExtra(ConstantKey.AUTH_KEY);
+            String name = getIntent().getStringExtra(ConstantKey.NAME_KEY);
+            Log.d(TAG, "MessagingService: "+auth + ", " +name);
+        }
     }
+
+    private void sendNotification() {
+        JSONObject notification = new JSONObject();
+        JSONObject body = new JSONObject();
+
+        try {
+            body.put("title", "Enter_title");
+            body.put("body", "Enter_body");
+            body.put("message", "Enter_message");   //Enter your notification message
+            notification.put("to", "Enter_token");
+            notification.put("data", body);
+        } catch (Exception e) {
+            Log.e(TAG, "" + e.getMessage());
+        }
+
+        sendNotification(notification);
+    }
+    private void sendNotification(JSONObject notification) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ConstantKey.FCM_API, notification, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse: " + response.toString());
+                        Toast.makeText(VideoActivity.this, "onResponse: " + response.toString(), Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: Didn't work " + error.getMessage());
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", ConstantKey.SERVER_KEY);
+                params.put("Content-Type", ConstantKey.CONTENT_TYPE);
+                return params;
+            }
+        };
+        MyVolleyApi.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    //====================================================| BroadcastReceiver
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String title = intent.getExtras().getString("title");
+            if (title.equals("Accepted")) {
+                //
+            }
+        }
+    };
 
     //=============================================================| onResume(), onPause(), onDestroy(), onCreateOptionsMenu()
     @Override
@@ -211,6 +287,13 @@ public class VideoActivity extends AppCompatActivity {
             reconnectingProgressBar.setVisibility((room.getState() != Room.State.RECONNECTING) ? View.GONE : View.VISIBLE);
             videoStatusTextView.setText("Connected to " + room.getName());
         }
+
+        //-------------------------------------------------------| BroadcastReceiver
+        try {
+            LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver), new IntentFilter(ConstantKey.NOTIFICATION_BROADCAST_RECEIVER)); //After Oreo version this code must be used
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -226,6 +309,13 @@ public class VideoActivity extends AppCompatActivity {
             localVideoTrack = null;
         }
         super.onPause();
+
+        //-------------------------------------------------------| BroadcastReceiver
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver); //After Oreo version this code must be used
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

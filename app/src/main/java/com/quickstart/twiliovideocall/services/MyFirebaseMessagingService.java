@@ -21,6 +21,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.quickstart.twiliovideocall.R;
 import com.quickstart.twiliovideocall.session.SharedPrefManager;
+import com.quickstart.twiliovideocall.utils.ConstantKey;
 import com.quickstart.twiliovideocall.views.activities.VideoActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -51,7 +52,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "FCM Message data payload: " + remoteMessage.getData());
 
             Bundle bundle = new Bundle();
-            //bundle.putString(ConstantKey.FINISH_MODEL, remoteMessage.getData().get(ConstantKey.FINISH_MODEL));
+            bundle.putString(ConstantKey.AUTH_KEY, remoteMessage.getData().get(ConstantKey.AUTH_KEY));
+            bundle.putString(ConstantKey.NAME_KEY, remoteMessage.getData().get(ConstantKey.NAME_KEY));
             //sendMyBroadCast(false, remoteMessage.getNotification().getTitle(), remoteMessage.getData().get(ConstantKey.FINISH_MODEL));
             sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), bundle);
         }
