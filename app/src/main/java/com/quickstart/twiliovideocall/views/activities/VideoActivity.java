@@ -206,6 +206,7 @@ public class VideoActivity extends AppCompatActivity {
             String name = getIntent().getExtras().getString(ConstantKey.NAME_KEY);
             Log.d(TAG, "MessagingService: "+auth + ", " +name);
         }*/
+
         if (getIntent().getExtras() != null) {
             boolean isUser = getIntent().getBooleanExtra("isUser", false);
             if (isUser) {
@@ -239,27 +240,34 @@ public class VideoActivity extends AppCompatActivity {
     }*/
 
     private void sendNotification(String receiverToken) {
-        JSONObject notification = new JSONObject();
-        JSONObject body = new JSONObject();
+        JSONObject root = new JSONObject();
         try {
-            body.put("title", "HeloDok");
-            body.put("body", "Mr. User");
-            //body.put("message", "Enter_message");   //Enter your notification message
-            notification.put("to", receiverToken);
-            notification.put("data", body);
+            JSONObject notification = new JSONObject();
+            notification.put("title", "HeloDok");
+            notification.put("body", "Mr. User");
+            JSONObject data = new JSONObject();
+            data.put(ConstantKey.AUTH_KEY, "");
+            data.put(ConstantKey.NAME_KEY, "");
+
+            data.put("message", "Hello there!");
+            root.put("notification", notification);
+            root.put("data", data);
+            root.put("to", receiverToken);
+
+            Log.d(TAG, "JSON: "+root.toString());
         } catch (Exception e) {
             Log.e(TAG, "" + e.getMessage());
         }
-        sendNotification(notification);
+        sendNotification(root);
     }
-    private void sendNotification(JSONObject notification) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ConstantKey.FCM_API, notification, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, "onResponse: " + response.toString());
-                        Toast.makeText(VideoActivity.this, "onResponse: " + response.toString(), Toast.LENGTH_LONG).show();
-                    }
-                },
+    private void sendNotification(JSONObject object) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ConstantKey.FCM_API, object, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "onResponse: " + response.toString());
+                Toast.makeText(VideoActivity.this, "onResponse: " + response.toString(), Toast.LENGTH_LONG).show();
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

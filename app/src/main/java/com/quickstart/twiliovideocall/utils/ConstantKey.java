@@ -18,7 +18,7 @@ public class ConstantKey {
     public final static String NAME_KEY = "NAME_KEY";
 
     public static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
-    public static final String SERVER_KEY = "AAAAxYErjCo:APA91bEWsoMZwbtzjt65KnxbEpqnINU9TFOy2fvN-3I26bNXdCEK8XonxTL863U63i98yzKkBCdLGP5b6W0GgOeP_Rosbgw1a9l8UY-K0vB45Pkh7C_0er8iPJGTc1Ywl_6vgeuSFp6m";
+    public static final String SERVER_KEY = "key=AAAAxYErjCo:APA91bEWsoMZwbtzjt65KnxbEpqnINU9TFOy2fvN-3I26bNXdCEK8XonxTL863U63i98yzKkBCdLGP5b6W0GgOeP_Rosbgw1a9l8UY-K0vB45Pkh7C_0er8iPJGTc1Ywl_6vgeuSFp6m";
     public static final String CONTENT_TYPE = "application/json";
 }
 

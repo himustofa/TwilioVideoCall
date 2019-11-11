@@ -69,6 +69,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-database:18.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    //implementation 'com.google.android.gms:play-services-base:17.0.0' //twilio push notification
 
     //===============================================| Android Jetpack Components for MVVM
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"

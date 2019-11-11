@@ -86,18 +86,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //https://developer.android.com/guide/topics/ui/notifiers/notifications#ManageChannels
         String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        //Uri defaultSoundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notifysnd);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_radio_button_checked_black_24dp)
                 .setWhen(System.currentTimeMillis())
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_video_call_black_24dp))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setChannelId(channelId)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .addAction(android.R.drawable.ic_menu_view, "VIEW", pendingIntent);
+                //.addAction(android.R.drawable.ic_delete, "DISMISS", dismissIntent);
 
         /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo);
