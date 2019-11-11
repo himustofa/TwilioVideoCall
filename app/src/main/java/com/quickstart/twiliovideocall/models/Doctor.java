@@ -6,12 +6,14 @@ public class Doctor {
     private String name;
     private String phone;
     private String active;
+    private String token;
 
-    public Doctor(String uid, String name, String phone, String active) {
+    public Doctor(String uid, String name, String phone, String active, String token) {
         this.uid = uid;
         this.name = name;
         this.phone = phone;
         this.active = active;
+        this.token = token;
     }
 
     public String getUid() {
@@ -44,5 +46,13 @@ public class Doctor {
 
     public void setActive(String active) {
         this.active = active;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

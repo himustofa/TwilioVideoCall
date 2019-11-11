@@ -22,4 +22,9 @@
 
     <!-- FirebaseMessagingService -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+    <!-- ProgressDialog -->
+    <string name="loading_title">Loading</string>
+    <string name="progress">Please wait...</string>
+
 </resources>
