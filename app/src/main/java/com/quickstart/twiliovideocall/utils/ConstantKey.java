@@ -1,4 +1,4 @@
-package com.quickstart.twiliovideocall.util;
+package com.quickstart.twiliovideocall.utils;
 
 public class ConstantKey {
 

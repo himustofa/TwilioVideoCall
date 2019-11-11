@@ -1,17 +1,8 @@
-package com.quickstart.twiliovideocall.util;
-
+package com.quickstart.twiliovideocall.utils;
 
 import android.content.Context;
-import android.graphics.ImageFormat;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.params.StreamConfigurationMap;
-import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
-
-import androidx.annotation.RequiresApi;
 
 import com.twilio.video.Camera2Capturer;
 import com.twilio.video.CameraCapturer;
@@ -22,14 +13,13 @@ import org.webrtc.Camera2Enumerator;
 /*
  * Simple wrapper class that uses Camera2Capturer with supported devices.
  */
-public class CameraCapturerCompat {
+public class NewCameraCaptureCompact {
     private static final String TAG = "CameraCapturerCompat";
 
     private CameraCapturer camera1Capturer;
     private Camera2Capturer camera2Capturer;
     private Pair<CameraCapturer.CameraSource, String> frontCameraPair;
     private Pair<CameraCapturer.CameraSource, String> backCameraPair;
-    private CameraManager cameraManager;
 
     private final Camera2Capturer.Listener camera2Listener = new Camera2Capturer.Listener() {
         @Override
@@ -48,9 +38,8 @@ public class CameraCapturerCompat {
         }
     };
 
-    public CameraCapturerCompat(Context context, CameraCapturer.CameraSource cameraSource) {
-        if (Camera2Capturer.isSupported(context) && isLollipopApiSupported()) {
-            cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+    public NewCameraCaptureCompact(Context context, CameraCapturer.CameraSource cameraSource) {
+        if (Camera2Capturer.isSupported(context)) {
             setCameraPairs(context);
             camera2Capturer = new Camera2Capturer(context, getCameraId(cameraSource), camera2Listener);
         } else {
@@ -99,14 +88,6 @@ public class CameraCapturerCompat {
     private void setCameraPairs(Context context) {
         Camera2Enumerator camera2Enumerator = new Camera2Enumerator(context);
         for (String cameraId : camera2Enumerator.getDeviceNames()) {
-            if (!isPrivateImageFormatSupportedForCameraId(cameraId)) {
-                /*
-                 * This is a temporary work around for a RuntimeException that occurs on devices which contain cameras
-                 * that do not support ImageFormat.PRIVATE output formats. A long term fix is currently in development.
-                 * https://github.com/twilio/video-quickstart-android/issues/431
-                 */
-                continue;
-            }
             if (camera2Enumerator.isFrontFacing(cameraId)) {
                 frontCameraPair = new Pair<>(CameraCapturer.CameraSource.FRONT_CAMERA, cameraId);
             }
@@ -130,25 +111,5 @@ public class CameraCapturerCompat {
         } else {
             return backCameraPair.first;
         }
-    }
-
-    private boolean isLollipopApiSupported() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    private boolean isPrivateImageFormatSupportedForCameraId(String cameraId) {
-        boolean isPrivateImageFormatSupported = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CameraCharacteristics cameraCharacteristics;
-            try {
-                cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            final StreamConfigurationMap streamMap = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            isPrivateImageFormatSupported = streamMap.isOutputSupportedFor(ImageFormat.PRIVATE);
-        }
-        return isPrivateImageFormatSupported;
     }
 }

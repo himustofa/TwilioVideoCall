@@ -13,7 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quickstart.twiliovideocall.models.Doctor;
 import com.quickstart.twiliovideocall.models.User;
-import com.quickstart.twiliovideocall.util.ConstantKey;
+import com.quickstart.twiliovideocall.utils.ConstantKey;
 
 public class FirebaseRepository {
 

@@ -37,8 +37,8 @@ import com.koushikdutta.ion.Ion;
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
 import com.quickstart.twiliovideocall.views.dialogs.Dialog;
-import com.quickstart.twiliovideocall.util.CameraCapturerCompat;
-import com.quickstart.twiliovideocall.util.ConstantKey;
+import com.quickstart.twiliovideocall.utils.CameraCapturerCompat;
+import com.quickstart.twiliovideocall.utils.ConstantKey;
 
 import com.twilio.video.AudioCodec;
 import com.twilio.video.CameraCapturer;
