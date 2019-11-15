@@ -7,16 +7,21 @@ import androidx.lifecycle.ViewModelProviders;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.quickstart.twiliovideocall.R;
 import com.quickstart.twiliovideocall.models.Doctor;
 import com.quickstart.twiliovideocall.models.User;
+import com.quickstart.twiliovideocall.services.MyNetworkReceiver;
 import com.quickstart.twiliovideocall.session.SharedPrefManager;
 import com.quickstart.twiliovideocall.utils.ConstantKey;
+import com.quickstart.twiliovideocall.utils.Network;
 import com.quickstart.twiliovideocall.utils.Utility;
 import com.quickstart.twiliovideocall.viewmodels.DoctorViewModel;
 import com.quickstart.twiliovideocall.viewmodels.UserViewModel;
@@ -26,12 +31,16 @@ import com.twilio.video.VideoView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     private VideoView primaryVideoView;
     private CameraCapturer cameraCapturer;
 
     private ProgressDialog mProgress = null;
     private UserViewModel mUserViewModel;
     private DoctorViewModel mDoctorViewModel;
+
+    private MyNetworkReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         //audioOutput();
 
         //===============================================| Initialize ViewModel | Receive the data and observe the data from ViewModel
+        mNetworkReceiver = new MyNetworkReceiver(this);
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         mDoctorViewModel = ViewModelProviders.of(this).get(DoctorViewModel.class);
 
@@ -52,6 +62,27 @@ public class MainActivity extends AppCompatActivity {
         ((Button) findViewById(R.id.user_id)).setOnClickListener(new ActionHandler());
         ((Button) findViewById(R.id.doctor_id)).setOnClickListener(new ActionHandler());
 
+        //Log.d(TAG, "Network getNetworkWifiSpeed: "+ Network.getWifiLevel(this));
+        //Log.d(TAG, "Network getMobileDataLevel: "+ Network.getMobileDataLevel(this));
+        //Log.d(TAG, "Network getNetworkClass: "+ Network.getNetworkClass(this));
+
+    }
+
+    //===============================================| onStart(), onPause(), onResume(), onStop()
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(mNetworkReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //===============================================| Click Events

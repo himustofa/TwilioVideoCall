@@ -27,4 +27,6 @@
     <string name="loading_title">Loading</string>
     <string name="progress">Please wait...</string>
 
+    <string name="network_unavailable">Network connection is not available</string>
+
 </resources>

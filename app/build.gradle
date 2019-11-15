@@ -12,7 +12,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         //Declare variable for access token in BuildConfig.class for secure
-        buildConfigField("String", "TWILIO_ACCESS_TOKEN", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmLTE1NzMyOTY3OTkiLCJpc3MiOiJTSzFmYTY4Y2Q1NGI2ODY0Mzg5YjM3OTA3YjNkMGNkMTFmIiwic3ViIjoiQUNmOTIyOTFlZGYyZTRlNmI5MGUyYjQzNzQ1MmVkNWVmZiIsImV4cCI6MTU3MzMwMDM5OSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoidGVzdDEiLCJ2aWRlbyI6eyJyb29tIjoia2FtYWwifX19.B0fEkxkF4-V1b1LwdIxm5U8T2X70zXeYlXLnlWR7pQg")}\"")
+        buildConfigField("String", "TWILIO_ACCESS_TOKEN", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN", "YOUR_ACCESS_TOKEN")}\"")
         buildConfigField("String", "TWILIO_ACCESS_TOKEN_SERVER", "\"${getSecretProperty("TWILIO_ACCESS_TOKEN_SERVER", "https://capri-mayfly-2386.twil.io/token")}\"")
         buildConfigField("boolean", "USE_TOKEN_SERVER", "${getSecretProperty("USE_TOKEN_SERVER", true)}")
     }
@@ -55,6 +55,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.1.0'
 
+
     //===============================================| Twilio library
     implementation 'com.twilio:video-android:5.0.0'
 
@@ -66,15 +67,21 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.0'
 
     //===============================================| Firebase library
-    implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-database:18.0.1'
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-database:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging:19.0.0'
     //implementation 'com.google.android.gms:play-services-base:17.0.0' //twilio push notification
 
     //===============================================| Android Jetpack Components for MVVM
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "androidx.lifecycle:lifecycle-common-java8:2.0.0"
     testImplementation "androidx.arch.core:core-testing:2.0.1"
+
+
+    //implementation "com.squareup.okhttp3:okhttp:4.2.1"
+    //testImplementation "com.squareup.okhttp3:mockwebserver:4.2.1"
+
+    //implementation 'com.github.oatrice:internet-speed-testing:1.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

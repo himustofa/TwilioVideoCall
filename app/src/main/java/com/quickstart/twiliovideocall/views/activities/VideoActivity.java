@@ -34,14 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
@@ -51,7 +46,6 @@ import com.koushikdutta.ion.Ion;
 import com.quickstart.twiliovideocall.BuildConfig;
 import com.quickstart.twiliovideocall.R;
 import com.quickstart.twiliovideocall.models.Doctor;
-import com.quickstart.twiliovideocall.models.User;
 import com.quickstart.twiliovideocall.repositories.volley.MyVolleyApi;
 import com.quickstart.twiliovideocall.viewmodels.DoctorViewModel;
 import com.quickstart.twiliovideocall.viewmodels.UserViewModel;
@@ -89,7 +83,6 @@ import com.twilio.video.VideoView;
 import com.twilio.video.Vp8Codec;
 import com.twilio.video.Vp9Codec;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
@@ -201,35 +194,23 @@ public class VideoActivity extends AppCompatActivity {
         mUserViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         mDoctorViewModel = ViewModelProviders.of(this).get(DoctorViewModel.class);
 
-        /*if (getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null && getIntent().hasExtra(ConstantKey.AUTH_KEY)) {
             String auth = getIntent().getExtras().getString(ConstantKey.AUTH_KEY);
             String name = getIntent().getExtras().getString(ConstantKey.NAME_KEY);
             Log.d(TAG, "MessagingService: "+auth + ", " +name);
-        }*/
+            connectToRoom(ConstantKey.ROOM_KEY);
+        }
 
         if (getIntent().getExtras() != null) {
             boolean isUser = getIntent().getBooleanExtra("isUser", false);
             if (isUser) {
-                getDoctorData();
-            } else {
-                //getDoctorData();
+                sendToDoctorNotify();
             }
         }
     }
 
-    private void getDoctorData() {
+    private void sendToDoctorNotify() {
         mDoctorViewModel.getDoctor(ConstantKey.DOCTOR_UID).observe(this, new Observer<Doctor>() {
-            @Override
-            public void onChanged(Doctor doctor) {
-                if (doctor != null) {
-                    sendNotification(doctor.getToken());
-                }
-            }
-        });
-    }
-
-    /*private void getDoctorData() {
-        mUserViewModel.getUser(ConstantKey.USER_UID).observe(this, new Observer<Doctor>() {
             @Override
             public void onChanged(Doctor doctor) {
                 if (doctor != null) {
@@ -237,22 +218,22 @@ public class VideoActivity extends AppCompatActivity {
                 }
             }
         });
-    }*/
+    }
 
-    private void sendNotification(String receiverToken) {
+    private void sendNotification(Doctor doctor) {
         JSONObject root = new JSONObject();
         try {
             JSONObject notification = new JSONObject();
             notification.put("title", "HeloDok");
             notification.put("body", "Mr. User");
             JSONObject data = new JSONObject();
-            data.put(ConstantKey.AUTH_KEY, "");
-            data.put(ConstantKey.NAME_KEY, "");
+            data.put(ConstantKey.AUTH_KEY, doctor.getUid());
+            data.put(ConstantKey.NAME_KEY, doctor.getName());
 
             data.put("message", "Hello there!");
             root.put("notification", notification);
             root.put("data", data);
-            root.put("to", receiverToken);
+            root.put("to", doctor.getToken());
 
             Log.d(TAG, "JSON: "+root.toString());
         } catch (Exception e) {

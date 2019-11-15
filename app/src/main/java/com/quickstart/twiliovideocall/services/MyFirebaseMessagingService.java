@@ -98,9 +98,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setChannelId(channelId)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .addAction(android.R.drawable.ic_menu_view, "VIEW", pendingIntent);
-                //.addAction(android.R.drawable.ic_delete, "DISMISS", dismissIntent);
+                //.setContentIntent(pendingIntent)
+                .addAction(android.R.drawable.ic_menu_view, "ACCEPT", pendingIntent)
+                .addAction(android.R.drawable.ic_delete, "CANCEL", null);
 
         /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo);
