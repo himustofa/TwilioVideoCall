@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -440,6 +441,8 @@ public class VideoActivity extends AppCompatActivity {
         primaryVideoView.setMirror(true);
         localVideoTrack.addRenderer(primaryVideoView);
         localVideoView = primaryVideoView;
+
+        //connectToRoom(ConstantKey.ROOM_KEY);
     }
 
     private CameraCapturer.CameraSource getAvailableCameraSource() {
@@ -479,43 +482,46 @@ public class VideoActivity extends AppCompatActivity {
 
     //=============================================================| Room connection by Alert dialog
     private void connectToRoom(String roomName) {
-        configureAudio(true);
-        ConnectOptions.Builder connectOptionsBuilder = new ConnectOptions.Builder(accessToken).roomName(roomName);
+        if (accessToken != null && roomName != null) {
+            configureAudio(true);
+            ConnectOptions.Builder connectOptionsBuilder = new ConnectOptions.Builder(accessToken).roomName(roomName);
 
-        // Add local audio track to connect options to share with participants.
-        if (localAudioTrack != null) {
-            connectOptionsBuilder.audioTracks(Collections.singletonList(localAudioTrack));
+            // Add local audio track to connect options to share with participants.
+            if (localAudioTrack != null) {
+                connectOptionsBuilder.audioTracks(Collections.singletonList(localAudioTrack));
+            }
+
+            // Add local video track to connect options to share with participants.
+            if (localVideoTrack != null) {
+                connectOptionsBuilder.videoTracks(Collections.singletonList(localVideoTrack));
+            }
+
+            // Set the preferred audio and video codec for media.
+            connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec));
+            connectOptionsBuilder.preferVideoCodecs(Collections.singletonList(videoCodec));
+
+            // Set the sender side encoding parameters.
+            connectOptionsBuilder.encodingParameters(encodingParameters);
+
+            /*
+             * Toggles automatic track subscription. If set to false, the LocalParticipant will receive
+             * notifications of track publish events, but will not automatically subscribe to them. If
+             * set to true, the LocalParticipant will automatically subscribe to tracks as they are
+             * published. If unset, the default is true. Note: This feature is only available for Group
+             * Rooms. Toggling the flag in a P2P room does not modify subscription behavior.
+             */
+            connectOptionsBuilder.enableAutomaticSubscription(enableAutomaticSubscription);
+
+            room = Video.connect(this, connectOptionsBuilder.build(), roomListener());
+            setDisconnectAction();
         }
-
-        // Add local video track to connect options to share with participants.
-        if (localVideoTrack != null) {
-            connectOptionsBuilder.videoTracks(Collections.singletonList(localVideoTrack));
-        }
-
-        // Set the preferred audio and video codec for media.
-        connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec));
-        connectOptionsBuilder.preferVideoCodecs(Collections.singletonList(videoCodec));
-
-        // Set the sender side encoding parameters.
-        connectOptionsBuilder.encodingParameters(encodingParameters);
-
-        /*
-         * Toggles automatic track subscription. If set to false, the LocalParticipant will receive
-         * notifications of track publish events, but will not automatically subscribe to them. If
-         * set to true, the LocalParticipant will automatically subscribe to tracks as they are
-         * published. If unset, the default is true. Note: This feature is only available for Group
-         * Rooms. Toggling the flag in a P2P room does not modify subscription behavior.
-         */
-        connectOptionsBuilder.enableAutomaticSubscription(enableAutomaticSubscription);
-
-        room = Video.connect(this, connectOptionsBuilder.build(), roomListener());
-        setDisconnectAction();
     }
 
     //=============================================================| UI
     // The initial state when there is no active room.
     private void intializeUI() {
-        connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_video_call_white_24dp));
+        //connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_video_call_white_24dp));
+        connectActionFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorGreen)));
         connectActionFab.show();
         connectActionFab.setOnClickListener(connectActionClickListener());
         switchCameraActionFab.show();
@@ -576,7 +582,8 @@ public class VideoActivity extends AppCompatActivity {
     //=============================================================| Action Listener
     // The actions performed during disconnect.
     private void setDisconnectAction() {
-        connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_call_end_white_24px));
+        //connectActionFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_call_end_white_24px));
+        connectActionFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
         connectActionFab.show();
         connectActionFab.setOnClickListener(disconnectClickListener());
     }
@@ -996,7 +1003,8 @@ public class VideoActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VideoActivity.this.showConnectDialog();
+                //VideoActivity.this.showConnectDialog();
+                connectToRoom(ConstantKey.ROOM_KEY);
             }
         };
     }

@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             app:fabSize="normal"
-            android:src="@drawable/ic_video_call_white_24dp" />
+            android:src="@drawable/ic_call_end_white_24dp" />
 
     </LinearLayout>
 
