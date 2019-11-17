@@ -101,22 +101,11 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.settings);
             setHasOptionsMenu(true);
-            setupCodecListPreference(AudioCodec.class,
-                    PREF_AUDIO_CODEC,
-                    PREF_AUDIO_CODEC_DEFAULT,
-                    (ListPreference) findPreference(PREF_AUDIO_CODEC));
-            setupCodecListPreference(VideoCodec.class,
-                    PREF_VIDEO_CODEC,
-                    PREF_VIDEO_CODEC_DEFAULT,
-                    (ListPreference) findPreference(PREF_VIDEO_CODEC));
-            setupSenderBandwidthPreferences(PREF_SENDER_MAX_AUDIO_BITRATE,
-                    PREF_SENDER_MAX_AUDIO_BITRATE_DEFAULT,
-                    (EditTextPreference) findPreference(PREF_SENDER_MAX_AUDIO_BITRATE));
-            setupSenderBandwidthPreferences(PREF_SENDER_MAX_VIDEO_BITRATE,
-                    PREF_SENDER_MAX_VIDEO_BITRATE_DEFAULT,
-                    (EditTextPreference) findPreference(PREF_SENDER_MAX_VIDEO_BITRATE));
+            setupCodecListPreference(AudioCodec.class, PREF_AUDIO_CODEC, PREF_AUDIO_CODEC_DEFAULT, (ListPreference) findPreference(PREF_AUDIO_CODEC));
+            setupCodecListPreference(VideoCodec.class, PREF_VIDEO_CODEC, PREF_VIDEO_CODEC_DEFAULT, (ListPreference) findPreference(PREF_VIDEO_CODEC));
+            setupSenderBandwidthPreferences(PREF_SENDER_MAX_AUDIO_BITRATE, PREF_SENDER_MAX_AUDIO_BITRATE_DEFAULT, (EditTextPreference) findPreference(PREF_SENDER_MAX_AUDIO_BITRATE));
+            setupSenderBandwidthPreferences(PREF_SENDER_MAX_VIDEO_BITRATE, PREF_SENDER_MAX_VIDEO_BITRATE_DEFAULT, (EditTextPreference) findPreference(PREF_SENDER_MAX_VIDEO_BITRATE));
         }
-
 
 
         @Override
@@ -129,20 +118,17 @@ public class SettingsActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
 
-        private void setupCodecListPreference(Class codecClass,
-                                              String key,
-                                              String defaultValue,
-                                              ListPreference preference) {
+        private void setupCodecListPreference(Class codecClass, String key, String defaultValue, ListPreference preference) {
+
             List<String> codecEntries = new ArrayList<>();
             if(codecClass == AudioCodec.class){
                 Collections.addAll(codecEntries, AUDIO_CODEC_NAMES);
-            }else{
+            } else {
                 Collections.addAll(codecEntries, VIDEO_CODEC_NAMES);
             }
 
             // Remove H264 if not supported
-            if (!MediaCodecVideoDecoder.isH264HwSupported() ||
-                    !MediaCodecVideoEncoder.isH264HwSupported()) {
+            if (!MediaCodecVideoDecoder.isH264HwSupported() || !MediaCodecVideoEncoder.isH264HwSupported()) {
                 codecEntries.remove(H264Codec.NAME);
             }
             String[] codecStrings = codecEntries.toArray(new String[codecEntries.size()]);
@@ -164,9 +150,7 @@ public class SettingsActivity extends AppCompatActivity {
             });
         }
 
-        private void setupSenderBandwidthPreferences(String key,
-                                                     String defaultValue,
-                                                     EditTextPreference editTextPreference) {
+        private void setupSenderBandwidthPreferences(String key, String defaultValue, EditTextPreference editTextPreference) {
             String value = sharedPreferences.getString(key, defaultValue);
 
             // Set layout with input type number for edit text
